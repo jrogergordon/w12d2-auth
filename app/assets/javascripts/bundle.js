@@ -146,6 +146,65 @@ var unLikeChirp = exports.unLikeChirp = function unLikeChirp(id) {
 
 /***/ }),
 
+/***/ "./frontend/actions/session.js":
+/*!*************************************!*\
+  !*** ./frontend/actions/session.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.logout = exports.login = exports.createNewUser = exports.LOGOUT_CURRENT_USER = exports.RECEIVE_CURRENT_USER = undefined;
+
+var _session = __webpack_require__(/*! ../utils/session */ "./frontend/utils/session.js");
+
+var RECEIVE_CURRENT_USER = exports.RECEIVE_CURRENT_USER = "RECEIVE_CURRENT_USER";
+var LOGOUT_CURRENT_USER = exports.LOGOUT_CURRENT_USER = "LOGOUT_CURRENT_USER";
+
+var receiveCurrentUser = function receiveCurrentUser(user) {
+    return {
+        type: RECEIVE_CURRENT_USER,
+        user: user
+    };
+};
+
+var logoutCurrentUser = function logoutCurrentUser() {
+    return {
+        type: LOGOUT_CURRENT_USER
+    };
+};
+
+var createNewUser = exports.createNewUser = function createNewUser(formUser) {
+    return function (dispatch) {
+        return (0, _session.postUser)(formUser).then(function (user) {
+            return dispatch(receiveCurrentUser(user));
+        });
+    };
+};
+
+var login = exports.login = function login(formUser) {
+    return function (dispatch) {
+        return (0, _session.postSession)(formUser).then(function (user) {
+            return dispatch(receiveCurrentUser(user));
+        });
+    };
+};
+
+var logout = exports.logout = function logout() {
+    return function (dispatch) {
+        return (0, _session.deleteSession)().then(function () {
+            return dispatch(logoutoutCurrentUser());
+        });
+    };
+};
+
+/***/ }),
+
 /***/ "./frontend/bluebird.jsx":
 /*!*******************************!*\
   !*** ./frontend/bluebird.jsx ***!
@@ -222,6 +281,10 @@ var _chirp_index_container = __webpack_require__(/*! ./chirps/chirp_index_contai
 
 var _chirp_index_container2 = _interopRequireDefault(_chirp_index_container);
 
+var _signup_container = __webpack_require__(/*! ./session/signup_container */ "./frontend/components/session/signup_container.js");
+
+var _signup_container2 = _interopRequireDefault(_signup_container);
+
 var _home = __webpack_require__(/*! ./home/home */ "./frontend/components/home/home.jsx");
 
 var _home2 = _interopRequireDefault(_home);
@@ -236,7 +299,8 @@ exports.default = function () {
     null,
     _react2.default.createElement(_reactRouterDom.Route, { path: '/', component: _nav_bar_container2.default }),
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { path: '/chirps', component: _chirp_index_container2.default })
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/chirps', component: _chirp_index_container2.default }),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/signup', component: _signup_container2.default })
   );
 };
 
@@ -703,6 +767,53 @@ exports.default = function (_ref) {
 
 /***/ }),
 
+/***/ "./frontend/components/session/signup.jsx":
+/*!************************************************!*\
+  !*** ./frontend/components/session/signup.jsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: super() outside of class constructor (5:8)\n\n\u001b[0m \u001b[90m 3 | \u001b[39m\u001b[36mclass\u001b[39m signup \u001b[36mextends\u001b[39m \u001b[33mReact\u001b[39m\u001b[33m.\u001b[39m\u001b[33mComponent\u001b[39m {\n \u001b[90m 4 | \u001b[39m    constructr(props){\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 5 | \u001b[39m        \u001b[36msuper\u001b[39m(props)\u001b[33m;\u001b[39m\n \u001b[90m   | \u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 6 | \u001b[39m        \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mstate \u001b[33m=\u001b[39m {\n \u001b[90m 7 | \u001b[39m            username\u001b[33m:\u001b[39m \u001b[32m''\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 8 | \u001b[39m            email\u001b[33m:\u001b[39m \u001b[32m''\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n");
+
+/***/ }),
+
+/***/ "./frontend/components/session/signup_container.js":
+/*!*********************************************************!*\
+  !*** ./frontend/components/session/signup_container.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _session = __webpack_require__(/*! ../../actions/session */ "./frontend/actions/session.js");
+
+var _signup = __webpack_require__(/*! ./signup */ "./frontend/components/session/signup.jsx");
+
+var _signup2 = _interopRequireDefault(_signup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapDispatchtoProps = function mapDispatchtoProps(dispatch) {
+    return {
+        createNewUser: function createNewUser(formUser) {
+            return dispatch((0, _session.createNewUser)(formUser));
+        }
+    };
+};
+
+exports.default = (0, _reactRedux.connect)(null, mapDispatchtoProps)(_signup2.default);
+
+/***/ }),
+
 /***/ "./frontend/reducers/chirps.js":
 /*!*************************************!*\
   !*** ./frontend/reducers/chirps.js ***!
@@ -790,11 +901,53 @@ var _entities = __webpack_require__(/*! ./entities */ "./frontend/reducers/entit
 
 var _entities2 = _interopRequireDefault(_entities);
 
+var _session = __webpack_require__(/*! ./session */ "./frontend/reducers/session.js");
+
+var _session2 = _interopRequireDefault(_session);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = (0, _redux.combineReducers)({
-  entities: _entities2.default
+  entities: _entities2.default,
+  session: _session2.default
 });
+
+/***/ }),
+
+/***/ "./frontend/reducers/session.js":
+/*!**************************************!*\
+  !*** ./frontend/reducers/session.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _session = __webpack_require__(/*! ../actions/session */ "./frontend/actions/session.js");
+
+var _nullSession = {
+    currentUser: null
+};
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _nullSession;
+    var action = arguments[1];
+
+    Object.freeze(state);
+    switch (action.type) {
+        case _session.RECEIVE_CURRENT_USER:
+            return Object.assign({}, { currentUser: action.user });
+        case _session.LOGOUT_CURRENT_USER:
+            return _nullSession;
+        default:
+            return state;
+    }
+};
 
 /***/ }),
 
@@ -900,6 +1053,44 @@ var deleteLikeFromChirp = exports.deleteLikeFromChirp = function deleteLikeFromC
     method: 'DELETE',
     data: { id: id }
   });
+};
+
+/***/ }),
+
+/***/ "./frontend/utils/session.js":
+/*!***********************************!*\
+  !*** ./frontend/utils/session.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var postUser = exports.postUser = function postUser(user) {
+    return $.ajax({
+        url: '/api/users',
+        method: 'POST',
+        data: { user: user }
+    });
+};
+
+var postSession = exports.postSession = function postSession(user) {
+    return $.ajax({
+        url: '/api/session',
+        method: 'POST',
+        data: { user: user }
+    });
+};
+
+var deleteSession = exports.deleteSession = function deleteSession() {
+    return $.ajax({
+        url: '/api/session',
+        method: 'DELETE'
+    });
 };
 
 /***/ }),
